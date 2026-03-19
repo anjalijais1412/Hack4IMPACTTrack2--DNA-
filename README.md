@@ -1,4 +1,3 @@
-# Hack4IMPACTTrack2--DNA-
 Team Name:- DNA<br>
 Member Name:- Anjali Jaiswal, Nisha Singh and Dhruv Bafana<br>
 Domain:-Green Infrastructure & Smart Cities<br>
