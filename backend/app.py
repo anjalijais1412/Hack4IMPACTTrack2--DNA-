@@ -4,8 +4,7 @@ import json
 import datetime
 
 sys.path.insert(0, os.path.join(os.path.dirname(__file__), ".."))
-
-from flask import Flask, jsonify, request
+from flask import Flask, jsonify, request, send_file
 from flask_cors import CORS
 
 from iot_simulation.sensor_sim  import simulate_bin_data
@@ -14,7 +13,9 @@ from alert_system.alert        import get_alerts_for_citizen
 from biogas_module.biogas_calc  import calculate_biogas
 app = Flask(__name__)
 CORS(app)
-
+@app.route('/')
+def index():
+    return send_file(os.path.join(os.path.dirname(__file__), '..', 'dashboard', 'index.html'))
 rewards = {}
 
 @app.route("/api/bins")
