@@ -1,0 +1,53 @@
+{
+  "version": "0.2.0",
+  "configurations": [
+    {
+      "name": "Flask backend",
+      "type": "python",
+      "request": "launch",
+      "program": "${workspaceFolder}/backend/app.py",
+      "env": {
+        "FLASK_ENV": "development",
+        "FLASK_DEBUG": "1"
+      },
+      "jinja": true,
+      "justMyCode": true
+    },
+    {
+      "name": "IoT sensor simulation",
+      "type": "python",
+      "request": "launch",
+      "program": "${workspaceFolder}/iot_simulation/sensor_sim.py",
+      "justMyCode": true
+    },
+    {
+      "name": "Train ML model",
+      "type": "python",
+      "request": "launch",
+      "program": "${workspaceFolder}/ml_model/predictor.py",
+      "justMyCode": true
+    },
+    {
+      "name": "Test alert system",
+      "type": "python",
+      "request": "launch",
+      "program": "${workspaceFolder}/alert_system/alerts.py",
+      "justMyCode": true
+    },
+    {
+      "name": "Test biogas calc",
+      "type": "python",
+      "request": "launch",
+      "program": "${workspaceFolder}/biogas_module/biogas_calc.py",
+      "justMyCode": true
+    },
+    {
+      "name": "Trigger all UiPath bots",
+      "type": "python",
+      "request": "launch",
+      "program": "${workspaceFolder}/uipath_bots/python_triggers/trigger_all_bots.py",
+      "envFile": "${workspaceFolder}/.env",
+      "justMyCode": true
+    }
+  ]
+}

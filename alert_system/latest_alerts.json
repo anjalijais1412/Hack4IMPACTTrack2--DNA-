@@ -1,0 +1,11 @@
+[
+  {
+    "bin_id": "Bin_C3",
+    "zone": "",
+    "distance_m": 390,
+    "fill_level": 97.2,
+    "waste_type": "wet",
+    "message": "Garbage truck arriving near Bin_C3 ()! Please dispose waste now. ETA: ~4 min.",
+    "timestamp": "2026-03-20T19:27:47.775533"
+  }
+]

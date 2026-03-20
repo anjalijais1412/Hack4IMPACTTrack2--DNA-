@@ -1,0 +1,26 @@
+{
+  "python.defaultInterpreterPath": "${workspaceFolder}/venv/Scripts/python.exe",
+  "python.terminal.activateEnvironment": true,
+  "editor.formatOnSave": true,
+  "editor.tabSize": 4,
+  "files.eol": "\n",
+  "files.exclude": {
+    "**/__pycache__": true,
+    "**/*.pyc": true,
+    "**/overflow_model.pkl": true,
+    "venv": true
+  },
+  "liveServer.settings.port": 5500,
+  "liveServer.settings.donotShowInfoMsg": true,
+  "liveServer.settings.ignoreFiles": [
+    ".vscode/**",
+    "**/*.py",
+    "**/*.json",
+    "**/*.pkl",
+    "**/*.log",
+    "uipath_bots/**",
+    "iot_simulation/bin_data.json",
+    "alert_system/latest_alerts.json",
+    "backend/disposal_events.json"
+  ]
+}

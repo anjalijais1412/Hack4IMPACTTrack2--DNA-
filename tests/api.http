@@ -1,0 +1,24 @@
+### Bin status
+GET http://localhost:5000/api/bins
+
+### Route
+GET http://localhost:5000/api/route
+
+### Alerts
+GET http://localhost:5000/api/alerts?lat=20.2961&lng=85.8245
+
+### Biogas
+GET http://localhost:5000/api/biogas
+
+### Dashboard
+GET http://localhost:5000/api/dashboard
+
+### Reward
+POST http://localhost:5000/api/reward
+Content-Type: application/json
+
+{
+  "user_id": "citizen_001",
+  "points": 15,
+  "action": "wet_waste_disposed"
+}
