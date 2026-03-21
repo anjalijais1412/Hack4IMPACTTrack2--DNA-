@@ -243,9 +243,9 @@ body { font-family: 'Plus Jakarta Sans', sans-serif; background: var(--bg-gradie
 </div>
 
 <script>
-const API = window.location.hostname === "localhost" 
-  ? "http://localhost:5000/api" 
-  : window.location.origin + "/api";
+const API = window.location.hostname === "localhost"
+  ? "http://localhost:5000"
+  : "https://supportive-surprise-production.up.railway.app";
 let totalPoints = 0;
 
 window.onload = () => {
