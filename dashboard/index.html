@@ -1,117 +1,286 @@
- <!DOCTYPE html>
+<!DOCTYPE html>
 <html lang="en">
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>WATT_THE_WASTE! Dashboard</title>
+<title>WATT_THE_WASTE!</title>
+<link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;600;700;800&display=swap" rel="stylesheet">
 <style>
-  * { box-sizing: border-box; margin: 0; padding: 0; }
-  body { font-family: Arial, sans-serif; background: #0d1b2a; color: #e0e0e0; }
-  header { background: #122035; padding: 14px 24px;
-           display: flex; align-items: center; gap: 16px;
-           border-bottom: 1px solid #1e3a5f; flex-wrap: wrap; }
-  header h1 { color: #4ade80; font-size: 20px; }
-  header p  { font-size: 12px; color: #64748b; }
-  .btn { background: #4ade80; color: #0d1b2a; border: none;
-         border-radius: 8px; padding: 9px 18px; font-size: 13px;
-         font-weight: 700; cursor: pointer; }
-  .btn:hover { background: #22c55e; }
-  .btn-blue { background: #3b82f6; color: #fff; }
-  .btn-blue:hover { background: #2563eb; }
-  .stats { display: grid;
-           grid-template-columns: repeat(auto-fit, minmax(140px, 1fr));
-           gap: 12px; padding: 20px 24px 0; }
-  .stat { background: #1e2d3d; border-radius: 10px; padding: 14px; }
-  .stat label { font-size: 11px; color: #64748b;
-                text-transform: uppercase; letter-spacing: .5px; }
-  .stat .val { font-size: 26px; font-weight: 700;
-               color: #4ade80; margin-top: 4px; }
-  .stat .unit { font-size: 11px; color: #475569; margin-top: 2px; }
-  h2 { font-size: 13px; font-weight: 600; color: #94a3b8;
-       padding: 16px 24px 8px; text-transform: uppercase; letter-spacing: .5px; }
-  .bins { display: grid;
-          grid-template-columns: repeat(auto-fill, minmax(148px, 1fr));
-          gap: 10px; padding: 0 24px; }
-  .bin { background: #1e2d3d; border-radius: 8px; padding: 12px; }
-  .bin h4 { font-size: 12px; margin-bottom: 8px; color: #cbd5e1; }
-  .bar-bg { background: #0d1b2a; border-radius: 4px;
-            height: 8px; overflow: hidden; }
-  .bar { height: 8px; border-radius: 4px; transition: width .6s; }
-  .bin-meta { display: flex; justify-content: space-between;
-              margin-top: 6px; font-size: 11px; color: #64748b; }
-  .tag { display: inline-block; padding: 2px 7px;
-         border-radius: 10px; font-size: 10px; font-weight: 500; }
-  .tag.wet   { background: #14532d; color: #4ade80; }
-  .tag.dry   { background: #1e3a5f; color: #60a5fa; }
-  .tag.mixed { background: #451a03; color: #fb923c; }
-  .risk-h { color: #f87171; font-size: 10px; }
-  .risk-l { color: #4ade80; font-size: 10px; }
-  .alerts-box, .route-box {
-    margin: 0 24px 16px;
-    background: #1e2d3d;
-    border-radius: 10px; padding: 14px; }
-  .alert-item { background: #122035;
-                border-left: 3px solid #f59e0b;
-                border-radius: 0 6px 6px 0;
-                padding: 9px 12px; margin-bottom: 8px;
-                font-size: 12px; color: #cbd5e1; }
-  .stop { display: inline-block; background: #0d1b2a;
-          border-radius: 6px; padding: 5px 12px;
-          margin: 4px; font-size: 12px; color: #4ade80; }
-  footer { text-align: center; padding: 16px;
-           font-size: 11px; color: #334155; }
+:root {
+  --primary: #8c52ff;
+  --accent-pink: #ff66c4;
+  --accent-purple: #cb6ce6;
+  --bg-gradient: linear-gradient(135deg, #ff66c4, #cb6ce6, #8c52ff);
+  --section-bg: #f6e8ff;
+  --text-dark: #1f2937;
+}
+* { box-sizing: border-box; margin: 0; padding: 0; }
+body { font-family: 'Plus Jakarta Sans', sans-serif; background: var(--bg-gradient); color: var(--text-dark); }
+
+#splash-screen {
+  position: fixed; inset: 0; background: var(--bg-gradient);
+  display: flex; flex-direction: column; align-items: center;
+  justify-content: center; z-index: 9999; transition: opacity 0.8s ease;
+}
+.splash-logo { animation: pulse 1.5s infinite ease-in-out; }
+@keyframes pulse {
+  0% { transform: scale(1); opacity: 0.8; }
+  50% { transform: scale(1.1); opacity: 1; }
+  100% { transform: scale(1); opacity: 0.8; }
+}
+
+#main-wrapper { transition: transform 1s cubic-bezier(0.85,0,0.15,1); height: 300vh; }
+.show-profile #main-wrapper { transform: translateY(-100vh); }
+.show-dash    #main-wrapper { transform: translateY(-200vh); }
+.page-section { height: 100vh; width: 100%; overflow-y: auto; overflow-x: hidden; }
+
+.auth-card {
+  background: white; padding: 40px; border-radius: 32px;
+  width: 90%; max-width: 480px;
+  box-shadow: 0 30px 60px rgba(0,0,0,0.2);
+  text-align: center; margin: 10vh auto;
+}
+.input-group { text-align: left; margin-bottom: 15px; }
+.input-group label { display: block; font-weight: 700; font-size: 13px; margin-bottom: 5px; }
+.input-group input {
+  width: 100%; padding: 14px; border: none;
+  background: #f3f4f6; border-radius: 12px; font-family: inherit;
+}
+.action-btn {
+  width: 100%; padding: 16px; background: var(--bg-gradient);
+  color: white; border: none; border-radius: 12px;
+  font-weight: 800; cursor: pointer; margin-top: 10px; font-size: 15px;
+}
+
+#dashboard-page { background: white; }
+.dash-header {
+  background: white; padding: 20px 40px;
+  display: flex; justify-content: space-between; align-items: center;
+  border-bottom: 1px solid #f0f0f0; position: sticky; top: 0; z-index: 100;
+}
+.grad-text {
+  background: var(--bg-gradient);
+  -webkit-background-clip: text;
+    background-clip: text;
+     -webkit-text-fill-color: transparent;
+  font-weight: 800;
+}
+.card {
+  background: white; border-radius: 28px; padding: 24px;
+  border: 1px solid #f1f1f1; box-shadow: 0 4px 20px rgba(0,0,0,0.04);
+}
+.colored-section { background: var(--section-bg); padding: 40px; width: 100%; }
+.stats-strip {
+  display: grid; grid-template-columns: repeat(auto-fit, minmax(160px, 1fr));
+  gap: 20px; margin-bottom: 30px;
+}
+.bin-grid {
+  display: grid; grid-template-columns: repeat(auto-fill, minmax(200px, 1fr));
+  gap: 20px; margin-bottom: 40px;
+}
+.progress-bar {
+  height: 12px; background: #f1f5f9; border-radius: 6px;
+  margin: 12px 0; overflow: hidden;
+}
+.progress-fill { height: 100%; border-radius: 6px; transition: width 0.6s; }
+.tag-badge {
+  display: inline-block; font-size: 10px; font-weight: 900;
+  padding: 2px 8px; border-radius: 8px; letter-spacing: 1px;
+}
+.tag-wet   { background: #d1fae5; color: #065f46; }
+.tag-dry   { background: #dbeafe; color: #1e40af; }
+.tag-mixed { background: #fde8d8; color: #92400e; }
+.alert-item {
+  background: white; border-left: 4px solid #f59e0b;
+  border-radius: 0 16px 16px 0; padding: 14px 18px;
+  margin-bottom: 12px; font-size: 13px;
+}
+.route-stop {
+  display: inline-block; background: white; border-radius: 12px;
+  padding: 8px 16px; margin: 4px; font-size: 13px;
+  font-weight: 700; color: var(--primary);
+  border: 1px solid #e9d5ff;
+}
+.header-btn {
+  padding: 10px 20px; border-radius: 12px; border: 1px solid #ddd;
+  background: white; cursor: pointer; font-weight: 700; font-family: inherit;
+}
 </style>
 </head>
 <body>
-<header>
-  <div>
-    <h1>WATT_THE_WASTE!</h1>
-    <p>Smart Waste Dashboard — Team DNA | KIIT DU | HACK4IMPACT Track 2</p>
-  </div>
-  <div style="margin-left:auto;display:flex;gap:10px;flex-wrap:wrap">
-    <button class="btn" onclick="loadAll()">Refresh</button>
-    <button class="btn btn-blue" onclick="runBots()">Run UiPath Bots</button>
-  </div>
-</header>
 
-<div class="stats">
-  <div class="stat"><label>Total Bins</label>
-    <div class="val" id="s-total">--</div></div>
-  <div class="stat"><label>Need Collection</label>
-    <div class="val" id="s-full" style="color:#f87171">--</div></div>
-  <div class="stat"><label>Overflow Risk</label>
-    <div class="val" id="s-risk" style="color:#f59e0b">--</div></div>
-  <div class="stat"><label>Energy Generated</label>
-    <div class="val" id="s-energy">--</div>
-    <div class="unit">kWh today</div></div>
-  <div class="stat"><label>CO₂ Saved</label>
-    <div class="val" id="s-co2">--</div>
-    <div class="unit">kg avoided</div></div>
+<div id="splash-screen">
+  <div class="splash-logo">
+    <svg width="100" height="100" viewBox="0 0 24 24">
+      <rect width="24" height="24" rx="6" fill="white"/>
+      <path d="M12 5L9 13H12L11 19L15 11H12L13 5H12Z" fill="#8c52ff"/>
+    </svg>
+  </div>
+  <h1 style="color:white;margin-top:20px;font-weight:900;letter-spacing:1px;">WATT_THE_WASTE!</h1>
+  <p style="color:rgba(255,255,255,0.7);margin-top:8px;font-size:14px;">Smart Waste Management</p>
 </div>
 
-<h2>Bin Status</h2>
-<div class="bins" id="bins-grid"></div>
+<div id="main-wrapper">
 
-<h2>Citizen Alerts (500m radius)</h2>
-<div class="alerts-box" id="alerts-box">Loading...</div>
+  <!-- LOGIN PAGE -->
+  <section class="page-section" style="display:flex;align-items:center;">
+    <div class="auth-card">
+      <h2 style="font-size:32px;margin-bottom:8px;">Login</h2>
+      <p style="color:#6b7280;margin-bottom:30px;">Access your power portal</p>
+      <div class="input-group"><label>Email</label><input type="email" placeholder="name@email.com"></div>
+      <div class="input-group"><label>Password</label><input type="password" placeholder="••••••••"></div>
+      <button class="action-btn" onclick="goToProfile()">Sign In</button>
+    </div>
+  </section>
 
-<h2>Optimized Collection Route</h2>
-<div class="route-box" id="route-box">Loading...</div>
+  <!-- PROFILE PAGE -->
+  <section class="page-section" style="display:flex;align-items:center;">
+    <div class="auth-card">
+      <h2 style="font-size:28px;margin-bottom:8px;">Complete Profile</h2>
+      <p style="color:#6b7280;margin-bottom:24px;">Tell us about yourself</p>
+      <div class="input-group"><label>Full Name</label><input type="text" id="in-name" placeholder="Anjali Jaiswal"></div>
+      <div class="input-group"><label>Phone Number</label><input type="text" id="in-phone" placeholder="+91 98765 43210"></div>
+      <div class="input-group"><label>Address</label><input type="text" id="in-addr" placeholder="KIIT Campus, Bhubaneswar"></div>
+      <button class="action-btn" onclick="saveAndFinish()">Finish &amp; Launch Dashboard</button>
+    </div>
+  </section>
 
-<footer>WATT_THE_WASTE! &mdash;
-  Team DNA: Anjali Jaiswal, Nisha Singh, Dhruv Bafana &mdash; KIIT DU</footer>
+  <!-- DASHBOARD PAGE -->
+  <section class="page-section" id="dashboard-page">
+    <header class="dash-header">
+      <div style="display:flex;align-items:center;gap:12px;">
+        <svg width="36" height="36" viewBox="0 0 24 24">
+          <rect width="24" height="24" rx="7" fill="#8c52ff"/>
+          <path d="M12 5L9 13H12L11 19L15 11H12L13 5H12Z" fill="white"/>
+        </svg>
+        <h2 class="grad-text" style="font-size:22px;">WATT_THE_WASTE!</h2>
+      </div>
+      <div style="font-size:13px;color:#94a3b8;" id="user-greeting">Team DNA | KIIT DU</div>
+      <div style="display:flex;gap:10px;">
+        <button class="header-btn" onclick="loadAll()">Refresh</button>
+        <button class="header-btn" onclick="runBots()" style="background:var(--bg-gradient);color:white;border:none;">Run UiPath Bots</button>
+        <button class="header-btn" onclick="location.reload()">Logout</button>
+      </div>
+    </header>
+
+    <div style="padding:30px 40px;">
+      <!-- User Profile + Rewards -->
+      <div style="display:grid;grid-template-columns:2fr 1fr;gap:20px;margin-bottom:24px;">
+        <div class="card">
+          <p style="font-size:11px;font-weight:900;color:var(--primary);margin-bottom:16px;letter-spacing:1px;">USER PROFILE</p>
+          <div style="display:flex;gap:20px;align-items:center;">
+            <div style="width:70px;height:70px;border-radius:50%;background:var(--bg-gradient);display:flex;align-items:center;justify-content:center;font-size:24px;font-weight:bold;color:white;">
+              <span id="user-initial">U</span>
+            </div>
+            <div>
+              <h3 style="font-size:24px;font-weight:900;" id="out-name">Loading...</h3>
+              <p style="font-size:13px;color:#64748b;margin-top:6px;line-height:1.8;">
+                📞 <span id="out-phone"></span><br>
+                📍 <span id="out-addr"></span>
+              </p>
+            </div>
+          </div>
+        </div>
+        <div class="card" style="border:2px solid #fbcfe8;text-align:center;">
+          <p style="font-size:11px;font-weight:900;color:var(--accent-purple);letter-spacing:1px;">REWARD POINTS</p>
+          <div class="grad-text" style="font-size:56px;font-weight:900;" id="reward-points">0</div>
+          <p style="font-size:11px;font-weight:800;color:#94a3b8;letter-spacing:2px;">TOTAL POINTS</p>
+          <button onclick="addRewardPoints()" style="margin-top:12px;padding:8px 16px;background:var(--bg-gradient);color:white;border:none;border-radius:10px;font-weight:700;cursor:pointer;font-size:12px;">
+            + Log Disposal (+10pts)
+          </button>
+        </div>
+      </div>
+
+      <!-- Stats Strip (LIVE from API) -->
+      <div class="stats-strip">
+        <div class="card">
+          <p style="font-size:11px;font-weight:900;color:#94a3b8;letter-spacing:1px;">TOTAL BINS</p>
+          <h2 class="grad-text" style="font-size:40px;" id="s-total">--</h2>
+        </div>
+        <div class="card">
+          <p style="font-size:11px;font-weight:900;color:#94a3b8;letter-spacing:1px;">NEED COLLECTION</p>
+          <h2 style="font-size:40px;color:var(--accent-pink);" id="s-full">--</h2>
+        </div>
+        <div class="card">
+          <p style="font-size:11px;font-weight:900;color:#94a3b8;letter-spacing:1px;">OVERFLOW RISK</p>
+          <h2 style="font-size:40px;color:#f59e0b;" id="s-risk">--</h2>
+        </div>
+        <div class="card">
+          <p style="font-size:11px;font-weight:900;color:#94a3b8;letter-spacing:1px;">ENERGY GEN</p>
+          <h2 class="grad-text" style="font-size:40px;" id="s-energy">--</h2>
+          <p style="font-size:11px;color:#94a3b8;">kWh today</p>
+        </div>
+        <div class="card">
+          <p style="font-size:11px;font-weight:900;color:#94a3b8;letter-spacing:1px;">CO₂ SAVED</p>
+          <h2 class="grad-text" style="font-size:40px;" id="s-co2">--</h2>
+          <p style="font-size:11px;color:#94a3b8;">kg avoided</p>
+        </div>
+      </div>
+    </div>
+
+    <!-- Colored Section -->
+    <div class="colored-section">
+      <h3 style="font-weight:900;font-size:22px;margin-bottom:20px;">Bin Status</h3>
+      <div class="bin-grid" id="bins-grid">
+        <div style="color:#94a3b8;font-size:13px;">Loading bins...</div>
+      </div>
+
+      <h3 style="font-weight:900;font-size:22px;margin-bottom:20px;">Citizen Alerts (500m radius)</h3>
+      <div id="alerts-box" style="margin-bottom:40px;">
+        <div style="background:white;border-radius:20px;padding:20px;color:#94a3b8;font-size:13px;">Loading alerts...</div>
+      </div>
+
+      <h3 style="font-weight:900;font-size:22px;margin-bottom:20px;">Optimized Collection Route</h3>
+      <div id="route-box" style="background:white;border-radius:20px;padding:20px;">
+        <div style="color:#94a3b8;font-size:13px;">Calculating route...</div>
+      </div>
+    </div>
+
+    <footer style="text-align:center;padding:20px;font-size:12px;color:#94a3b8;background:white;">
+      WATT_THE_WASTE! — Team DNA: Anjali Jaiswal, Nisha Singh, Dhruv Bafana — KIIT DU | HACK4IMPACT Track 2
+    </footer>
+  </section>
+</div>
 
 <script>
-const API = "http://localhost:5000/api";
+const API = window.location.hostname === "localhost" 
+  ? "http://localhost:5000/api" 
+  : window.location.origin + "/api";
+let totalPoints = 0;
+
+window.onload = () => {
+  setTimeout(() => {
+    const splash = document.getElementById('splash-screen');
+    splash.style.opacity = '0';
+    setTimeout(() => splash.remove(), 800);
+  }, 2500);
+};
+
+function goToProfile() {
+  document.body.classList.add('show-profile');
+}
+
+function saveAndFinish() {
+  const name  = document.getElementById('in-name').value  || "User";
+  const phone = document.getElementById('in-phone').value || "Not provided";
+  const addr  = document.getElementById('in-addr').value  || "Not provided";
+  document.getElementById('out-name').innerText   = name;
+  document.getElementById('out-phone').innerText  = phone;
+  document.getElementById('out-addr').innerText   = addr;
+  document.getElementById('user-initial').innerText = name.charAt(0).toUpperCase();
+  document.getElementById('user-greeting').innerText = "Welcome, " + name;
+  document.body.classList.add('show-dash');
+  loadAll();
+}
 
 async function loadDashboard() {
   try {
     const r = await fetch(API + "/dashboard").then(r => r.json());
-    document.getElementById("s-total").textContent = r.total_bins;
-    document.getElementById("s-full").textContent  = r.full_bins;
-    document.getElementById("s-risk").textContent  = r.overflow_risk;
+    document.getElementById("s-total").textContent  = r.total_bins;
+    document.getElementById("s-full").textContent   = r.full_bins;
+    document.getElementById("s-risk").textContent   = r.overflow_risk;
     document.getElementById("s-energy").textContent = r.energy_kwh;
-    document.getElementById("s-co2").textContent   = r.co2_saved_kg;
+    document.getElementById("s-co2").textContent    = r.co2_saved_kg;
   } catch(e) { console.error("Dashboard error:", e); }
 }
 
@@ -119,23 +288,29 @@ async function loadBins() {
   try {
     const bins = await fetch(API + "/bins").then(r => r.json());
     document.getElementById("bins-grid").innerHTML = bins.map(b => {
-      const col = b.fill_level > 75 ? "#ef4444"
-                : b.fill_level > 50 ? "#f59e0b" : "#4ade80";
+      const pct = b.fill_level;
+      const col = pct > 75
+        ? "linear-gradient(90deg,#ff6664,#ff66c4)"
+        : pct > 50
+        ? "linear-gradient(90deg,#f59e0b,#fbbf24)"
+        : "linear-gradient(90deg,#8c52ff,#cb6ce6)";
       const risk = b.prediction?.overflow_risk
-        ? '<span class="risk-h">Overflow risk</span>'
-        : '<span class="risk-l">Normal</span>';
-      return `<div class="bin">
-        <h4>${b.bin_id} <small style="color:#475569">
-          ${b.zone || ""}</small></h4>
-        <div class="bar-bg">
-          <div class="bar"
-            style="width:${b.fill_level}%;background:${col}">
-          </div></div>
-        <div class="bin-meta">
-          <span>${b.fill_level}%</span>
-          <span class="tag ${b.waste_type}">${b.waste_type}</span>
+        ? '<span style="font-size:11px;color:#ef4444;font-weight:700;">Overflow risk</span>'
+        : '<span style="font-size:11px;color:#10b981;font-weight:700;">Normal</span>';
+      const typeClass = "tag-" + b.waste_type;
+      return `<div class="card">
+        <div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:8px;">
+          <strong style="font-size:14px;">${b.bin_id}</strong>
+          <span class="tag-badge ${typeClass}">${b.waste_type.toUpperCase()}</span>
         </div>
-        <div style="margin-top:5px">${risk}</div>
+        <div style="font-size:12px;color:#94a3b8;margin-bottom:4px;">${b.zone || ""}</div>
+        <div class="progress-bar">
+          <div class="progress-fill" style="width:${pct}%;background:${col};"></div>
+        </div>
+        <div style="display:flex;justify-content:space-between;align-items:center;">
+          <span style="font-size:15px;font-weight:900;">${pct}% Capacity</span>
+          ${risk}
+        </div>
       </div>`;
     }).join("");
   } catch(e) { console.error("Bins error:", e); }
@@ -143,42 +318,50 @@ async function loadBins() {
 
 async function loadAlerts() {
   try {
-    const alerts = await fetch(
-      API + "/alerts?lat=20.2961&lng=85.8245"
-    ).then(r => r.json());
-    const el = document.getElementById("alerts-box");
-    el.innerHTML = alerts.length
-      ? alerts.map(a =>
-          `<div class="alert-item">${a.message}
-           <span style="color:#64748b">(${a.distance_m}m)</span>
+    const alerts = await fetch(API + "/alerts?lat=20.2961&lng=85.8245").then(r => r.json());
+    document.getElementById("alerts-box").innerHTML = alerts.length
+      ? alerts.map(a => `
+          <div class="alert-item">
+            ${a.message}
+            <span style="color:#94a3b8;font-size:11px;margin-left:8px;">(${a.distance_m}m away)</span>
           </div>`).join("")
-      : `<p style="color:#4ade80;font-size:13px">
-           No urgent collections nearby</p>`;
+      : `<div style="background:white;border-radius:20px;padding:20px;color:#10b981;font-weight:700;">
+           No urgent collections nearby right now</div>`;
   } catch(e) { console.error("Alerts error:", e); }
 }
 
 async function loadRoute() {
   try {
     const r = await fetch(API + "/route").then(r => r.json());
-    document.getElementById("route-box").innerHTML =
-      r.optimized_route.length
-      ? `<p style="font-size:12px;color:#64748b;margin-bottom:8px">
+    document.getElementById("route-box").innerHTML = r.optimized_route.length
+      ? `<p style="font-size:12px;color:#94a3b8;margin-bottom:12px;font-weight:700;">
            ${r.total_stops} stops — est. ${r.estimated_time_mins} min
          </p>` +
         r.optimized_route.map((s, i) =>
-          `<span class="stop">${i+1}. ${s}</span>`
-        ).join(" &rarr; ")
-      : `<p style="color:#4ade80;font-size:13px">
-           All bins within normal range</p>`;
+          `<span class="route-stop">${i+1}. ${s}</span>`
+        ).join(" → ")
+      : `<p style="color:#10b981;font-weight:700;">All bins within normal range</p>`;
   } catch(e) { console.error("Route error:", e); }
+}
+
+async function addRewardPoints() {
+  try {
+    const uid = document.getElementById('out-name').innerText || "citizen_001";
+    const r = await fetch(API + "/reward", {
+      method: "POST",
+      headers: {"Content-Type": "application/json"},
+      body: JSON.stringify({user_id: uid, points: 10, action: "disposal"})
+    }).then(r => r.json());
+    totalPoints = r.total_points;
+    document.getElementById("reward-points").textContent = totalPoints;
+  } catch(e) { console.error("Reward error:", e); }
 }
 
 async function runBots() {
   try {
-    const r = await fetch(API + "/run-bots",
-      {method:"POST"}).then(r => r.json());
+    const r = await fetch(API + "/run-bots", {method:"POST"}).then(r => r.json());
     alert(r.status);
-  } catch(e) { alert("Could not reach Flask API. Is it running?"); }
+  } catch(e) { alert("Could not reach Flask API."); }
 }
 
 function loadAll() {
@@ -188,7 +371,6 @@ function loadAll() {
   loadRoute();
 }
 
-loadAll();
 setInterval(loadAll, 30000);
 </script>
 </body>

@@ -3,20 +3,31 @@ import os
 import json
 import datetime
 
-sys.path.insert(0, os.path.join(os.path.dirname(__file__), ".."))
-from flask import Flask, jsonify, request, send_file
+sys.path.insert(0, os.path.dirname(os.path.dirname(os.path.abspath(__file__))))
+
+from flask import Flask, jsonify, request, send_from_directory
 from flask_cors import CORS
 
-from iot_simulation.sensor_sim  import simulate_bin_data
-from ml_model.predictor         import predict_overflow, optimize_route
+from iot_simulation.sensor_sim import simulate_bin_data
+from ml_model.predictor        import predict_overflow, optimize_route
 from alert_system.alert        import get_alerts_for_citizen
-from biogas_module.biogas_calc  import calculate_biogas
+from biogas_module.biogas_calc import calculate_biogas
+
 app = Flask(__name__)
-CORS(app)
-@app.route('/')
-def index():
-    return send_file(os.path.join(os.path.dirname(__file__), '..', 'dashboard', 'index.html'))
+CORS(app, origins="*")
+
+BASE_DIR      = os.path.dirname(os.path.abspath(__file__))
+DASHBOARD_DIR = os.path.join(BASE_DIR, "dashboard")
+
 rewards = {}
+
+@app.route("/")
+def index():
+    return send_from_directory(DASHBOARD_DIR, "index.html")
+
+@app.route("/dashboard/<path:filename>")
+def dashboard_files(filename):
+    return send_from_directory(DASHBOARD_DIR, filename)
 
 @app.route("/api/bins")
 def get_bins():
@@ -34,6 +45,7 @@ def get_alerts():
     lat = float(request.args.get("lat", 20.2961))
     lng = float(request.args.get("lng", 85.8245))
     return jsonify(get_alerts_for_citizen(lat, lng, simulate_bin_data()))
+
 @app.route("/api/biogas")
 def get_biogas():
     data   = simulate_bin_data()
@@ -51,19 +63,19 @@ def add_reward():
     action = body.get("action", "disposal")
     rewards[uid] = rewards.get(uid, 0) + pts
     event = {
-        "user_id": uid, "points": pts,
-        "action": action, "total": rewards[uid],
-        "time": datetime.datetime.now().isoformat()
+        "user_id": uid,
+        "points":  pts,
+        "action":  action,
+        "total":   rewards[uid],
+        "time":    datetime.datetime.now().isoformat()
     }
-    events_path = os.path.join(
-        os.path.dirname(__file__), "disposal_events.json"
-    )
+    events_path = os.path.join(BASE_DIR, "disposal_events.json")
     with open(events_path, "w") as f:
         json.dump(event, f, indent=2)
     return jsonify({"user_id": uid, "total_points": rewards[uid]})
 
 @app.route("/api/dashboard")
-def dashboard():
+def dashboard_summary():
     bins   = simulate_bin_data()
     wet_kg = round(sum(
         b["fill_level"] * 0.5
@@ -87,13 +99,14 @@ def run_bots():
     try:
         subprocess.Popen([
             "python",
-            os.path.join(os.path.dirname(__file__),
-            "../uipath_bots/python_triggers/trigger_all_bots.py")
+            os.path.join(BASE_DIR, "..", "uipath_bots",
+                         "python_triggers", "trigger_all_bots.py")
         ])
         return jsonify({"status": "All UiPath bots triggered"})
     except Exception as e:
         return jsonify({"status": "error", "message": str(e)}), 500
 
 if __name__ == "__main__":
-    print("WATT_THE_WASTE! API → http://localhost:5000")
-    app.run(debug=True, port=5000)
+    print("WATT_THE_WASTE! API running")
+    port = int(os.environ.get("PORT", 5000))
+    app.run(host="0.0.0.0", port=port)
