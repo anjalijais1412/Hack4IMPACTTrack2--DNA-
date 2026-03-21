@@ -1,52 +1,52 @@
 [
   {
     "bin_id": "Bin_A1",
-    "fill_level": 46.17,
-    "waste_type": "dry",
-    "timestamp": "2026-03-21T05:11:52.641201",
+    "fill_level": 56.08,
+    "waste_type": "mixed",
+    "timestamp": "2026-03-21T15:09:32.620079",
     "location": {
-      "lat": 20.298861,
-      "lng": 85.829821
+      "lat": 20.298127,
+      "lng": 85.834203
     }
   },
   {
     "bin_id": "Bin_B2",
-    "fill_level": 39.58,
-    "waste_type": "wet",
-    "timestamp": "2026-03-21T05:11:52.641235",
+    "fill_level": 45.36,
+    "waste_type": "dry",
+    "timestamp": "2026-03-21T15:09:32.620102",
     "location": {
-      "lat": 20.295013,
-      "lng": 85.822194
+      "lat": 20.295186,
+      "lng": 85.828903
     }
   },
   {
     "bin_id": "Bin_C3",
-    "fill_level": 39.16,
+    "fill_level": 27.19,
     "waste_type": "mixed",
-    "timestamp": "2026-03-21T05:11:52.641250",
+    "timestamp": "2026-03-21T15:09:32.620111",
     "location": {
-      "lat": 20.300758,
-      "lng": 85.832878
+      "lat": 20.287396,
+      "lng": 85.815518
     }
   },
   {
     "bin_id": "Bin_D4",
-    "fill_level": 37.76,
-    "waste_type": "wet",
-    "timestamp": "2026-03-21T05:11:52.641260",
+    "fill_level": 57.8,
+    "waste_type": "dry",
+    "timestamp": "2026-03-21T15:09:32.620117",
     "location": {
-      "lat": 20.303834,
-      "lng": 85.83288
+      "lat": 20.291022,
+      "lng": 85.817413
     }
   },
   {
     "bin_id": "Bin_E5",
-    "fill_level": 85.49,
-    "waste_type": "dry",
-    "timestamp": "2026-03-21T05:11:52.641272",
+    "fill_level": 82.58,
+    "waste_type": "wet",
+    "timestamp": "2026-03-21T15:09:32.620123",
     "location": {
-      "lat": 20.291403,
-      "lng": 85.825009
+      "lat": 20.303076,
+      "lng": 85.833602
     }
   }
 ]

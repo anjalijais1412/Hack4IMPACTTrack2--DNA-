@@ -243,9 +243,9 @@ body { font-family: 'Plus Jakarta Sans', sans-serif; background: var(--bg-gradie
 </div>
 
 <script>
-const API = window.location.hostname === "localhost"
-  ? "http://localhost:5000"
-  : "https://supportive-surprise-production.up.railway.app";
+const API = window.location.hostname === "localhost" || window.location.hostname === "127.0.0.1"
+  ? "http://127.0.0.1:5000/api"
+  : "https://hack4impacttrack2-dna-production.up.railway.app/api";
 let totalPoints = 0;
 
 window.onload = () => {

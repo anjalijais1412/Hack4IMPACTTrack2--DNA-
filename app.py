@@ -14,7 +14,11 @@ from alert_system.alert        import get_alerts_for_citizen
 from biogas_module.biogas_calc import calculate_biogas
 
 app = Flask(__name__)
-CORS(app, origins="*")
+
+# Replace with your actual Vercel URL for better security
+#CORS(app, resources={r"/api/*": {"origins": "https://hack4-impact-track2-dna-j8fj.vercel.app/"}})
+CORS(app, origins=["https://hack4-impact-track2-dna-j8fj.vercel.app",
+                   "https://hack4-impact-track2-dna-j8fj-1jpoj16q6-anjalijais1412s-projects.vercel.app"])
 
 BASE_DIR      = os.path.dirname(os.path.abspath(__file__))
 DASHBOARD_DIR = os.path.join(BASE_DIR, "dashboard")
